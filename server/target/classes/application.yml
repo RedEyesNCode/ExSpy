@@ -1,0 +1,25 @@
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAWBJJNCNJC4GCX5R5
+      secret-key: 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
+    region:
+      static: ap-south-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: redeyesncode
+
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 10MB
+      max-file-size: 50MB
+      max-request-size: 45MB
+
+server:
+  port: 8080
