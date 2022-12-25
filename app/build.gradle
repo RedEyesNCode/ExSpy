@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.redeyesncode.xspy'
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.redeyesncode.xspy"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures{
+        viewBinding true
+        dataBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+
+    // RETROFIT DEPENDENCY
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+
+//JSON PARSING DEPENDENCY
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    //CIRCLE IMAGE VIEW
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+//sdp font library
+
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+    implementation 'com.intuit.ssp:ssp-android:1.1.0'
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
+// LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:2.5.1"
+
+    /* rxjava */
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+
+    //Karumi_Dexter_Permission_Libary.
+    implementation 'com.karumi:dexter:6.2.3'
+
+    //KOTLIN_COROUTINES
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+
+}

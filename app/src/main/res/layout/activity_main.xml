@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.redeyesncode.xspy.viewmodel.MainViewModel" />
+    </data>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="@dimen/_45sdp"
+                android:src="@drawable/ic_git"
+
+                android:layout_height="@dimen/_45sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:textSize="@dimen/_18sdp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+
+                android:text="RedEyesNCode/xSpy"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnGetPermission"
+            android:textSize="@dimen/_12sdp"
+            android:background="@color/teal_700"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="@string/get_permission"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:hint="@string/enter_victim_s_name"
+            android:background="@color/white"
+            android:paddingVertical="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:paddingHorizontal="@dimen/_4sdp"
+            android:singleLine="true"
+            android:inputType="text"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnSaveVictim"
+            android:textSize="@dimen/_12sdp"
+            android:background="@color/teal_700"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="@string/save_victim_to_aws"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnFetchAllContacts"
+            android:textSize="@dimen/_12sdp"
+
+            android:background="@drawable/background_rounded_green"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="SEND All Contacts"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnFetchAndroidDevice"
+            android:textSize="@dimen/_12sdp"
+            android:background="@drawable/background_rounded_green"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="@string/fetch_device_info"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnHideAppIcon"
+            android:textSize="@dimen/_12sdp"
+
+            android:background="@drawable/background_rounded_green"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="Hide App Icon"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnFetchGallery"
+            android:textSize="@dimen/_12sdp"
+
+            android:background="@drawable/background_rounded_green"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="@string/upload_gallery"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+</layout>
