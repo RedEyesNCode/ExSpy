@@ -1,6 +1,7 @@
 package com.redeyesncode.xspy.repo;
 
 import com.google.gson.JsonElement;
+import com.redeyesncode.xspy.base.ApiResponseListener;
 import com.redeyesncode.xspy.models.DeviceInfoBody;
 import com.redeyesncode.xspy.retrofit.ApiInterface;
 import com.redeyesncode.xspy.retrofit.RetrofitService;
@@ -90,16 +91,18 @@ public class MainRepository {
 
     }
 
-    public void checkServer(){
+    public void checkServer(ApiResponseListener apiResponseListener){
         Call<JsonElement> call = apiInterface.checkServer();
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-
+                apiResponseListener.onSuccess(response.body());
             }
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
+                apiResponseListener.onError(t.getMessage());
+
 
             }
         });

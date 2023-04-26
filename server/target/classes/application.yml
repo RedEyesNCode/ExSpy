@@ -1,8 +1,8 @@
 cloud:
   aws:
     credentials:
-      access-key: AKIAWBJJNCNJC4GCX5R5
-      secret-key: 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
+      access-key: AKIAUYTB63BPFNUX4HL7
+      secret-key: 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
     region:
       static: ap-south-1
     stack:
@@ -10,7 +10,7 @@ cloud:
 
 application:
   bucket:
-    name: redeyesncode
+    name: redeyesncodemaster
 
 
 spring:
@@ -22,4 +22,4 @@ spring:
       max-request-size: 45MB
 
 server:
-  port: 8080
+  port: 6767

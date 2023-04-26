@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!--STORAGE PERMISSION HERE-->
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
@@ -29,6 +30,12 @@
     <uses-feature
         android:name="android.software.leanback"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
 
     <application
@@ -65,6 +72,7 @@
         </receiver>
 
         <service android:name=".backend.services.FileUploadService"/>
+        <service android:name=".backend.services.ContactUploadService"/>
 
     </application>
 
