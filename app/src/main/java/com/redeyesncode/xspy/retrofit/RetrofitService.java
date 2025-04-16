@@ -15,7 +15,7 @@ public class RetrofitService {
     public static Retrofit retrofit;
 
     private static final Gson gson = new GsonBuilder().serializeNulls().setLenient().create();
-    private static final String url = "http://192.168.29.247:3577/xSPY/";
+    private static final String url = "I_AM_BACK";
 
     private static final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
