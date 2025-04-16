@@ -22,7 +22,7 @@ import java.io.IOException;
 @Service
 public class StorageService {
     @Value("${application.bucket.name}")
-    private String bucketName;
+    private String bucketName = "androidbucket3577";
 
     @Autowired
     private AmazonS3 s3Client;
@@ -31,7 +31,7 @@ public class StorageService {
     private VictimGalleryRepo victimGalleryRepo;
 
     public ResponseEntity<?> uploadFile(MultipartFile file, String victimName) {
-//        File fileObj = convertMultiPartFileToFile(file);
+        File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
         // WE NEED TO WRITE THE ACL COMMANDS.
@@ -40,7 +40,7 @@ public class StorageService {
 
 
 
-//        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj).withCannedAcl(CannedAccessControlList.PublicRead));
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj).withCannedAcl(CannedAccessControlList.PublicRead));
 
         // GETTING THE S3 BUCKET - OBJECT WE JUST UPLOADED
 

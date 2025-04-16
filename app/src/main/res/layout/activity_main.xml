@@ -40,9 +40,9 @@
                         android:textSize="@dimen/_18sdp"
                         android:textColor="@color/white"
                         android:layout_gravity="center"
-
-                        android:text="RedEyesNCode/xSpy"
+                        android:text="Remote-Access"
                         android:layout_height="wrap_content"/>
+                    <!--                        android:text="RedEyesNCode/xSpy"-->
 
 
                 </LinearLayout>

@@ -1,10 +1,14 @@
 package com.redeyesncode.xspy.repo;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.redeyesncode.xspy.base.ApiResponseListener;
 import com.redeyesncode.xspy.models.DeviceInfoBody;
 import com.redeyesncode.xspy.retrofit.ApiInterface;
 import com.redeyesncode.xspy.retrofit.RetrofitService;
+import com.redeyesncode.xspy.utils.Constants;
 
 import java.io.File;
 import java.util.HashMap;
@@ -117,11 +121,16 @@ public class MainRepository {
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                Gson gson = new Gson();
+                Log.i("VIEW_MODEL_onResponse()",gson.toJson(response.body()));
+                Log.i("VIEW_MODEL_onResponse()",gson.toJson(response.body()));
 
             }
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.i("VIEW_MODEL_onFailure()",t.getMessage());
+                Log.i("VIEW_MODEL_onFailure()",t.getMessage());
 
             }
         });

